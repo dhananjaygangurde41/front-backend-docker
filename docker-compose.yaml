@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"   # host:container (Flask runs on 5000 inside container)
+    networks:
+      - ares-network
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    environment:
+      - BACKEND_URL=http://backend:8000/api  # use service name + container port
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ares-network
+
+networks:
+  ares-network: {}
